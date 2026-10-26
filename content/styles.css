@@ -1,0 +1,125 @@
+/*
+ * YouTube Focus Mode — CSS rules
+ *
+ * These rules are activated/deactivated by toggling the
+ * `ytfm-focus-active` class on <html>.
+ *
+ * Design goals:
+ *   • Hide homepage feed, sidebar recommendations, Shorts, and end-screen suggestions.
+ *   • Preserve the search bar, player, subscriptions, playlists, channel pages,
+ *     and search-results pages.
+ *   • Use the most stable selectors YouTube currently exposes (custom element
+ *     tag names, which rarely change) rather than fragile class-name selectors.
+ */
+
+/* =========================================================================
+   1.  HOMEPAGE  — hide the entire recommendation feed
+   ========================================================================= */
+
+/* Primary homepage feed (rich grid of video cards) */
+html.ytfm-focus-active ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+html.ytfm-focus-active ytd-browse[page-subtype="home"] ytd-two-column-browse-results-renderer {
+  display: none !important;
+}
+
+/* Chips bar on homepage (topic filter chips like "All", "Music", etc.) */
+html.ytfm-focus-active ytd-browse[page-subtype="home"] ytd-feed-filter-chip-bar-renderer,
+html.ytfm-focus-active ytd-browse[page-subtype="home"] yt-chip-cloud-renderer {
+  display: none !important;
+}
+
+/* =========================================================================
+   2.  WATCH PAGE  — hide sidebar recommendations ("Up next" / autoplay)
+   ========================================================================= */
+
+/* The secondary column that holds all recommendations */
+html.ytfm-focus-active ytd-watch-flexy #secondary,
+html.ytfm-focus-active ytd-watch-flexy #related,
+html.ytfm-focus-active ytd-watch-flexy ytd-watch-next-secondary-results-renderer {
+  display: none !important;
+}
+
+/* Let the player stretch to use the freed space */
+html.ytfm-focus-active ytd-watch-flexy #primary {
+  max-width: 100% !important;
+}
+
+html.ytfm-focus-active ytd-watch-flexy #columns {
+  max-width: 100% !important;
+}
+
+/* End-screen video suggestions (overlay grid at the end of a video) */
+html.ytfm-focus-active .ytp-ce-element,
+html.ytfm-focus-active .ytp-endscreen-content {
+  display: none !important;
+}
+
+/* =========================================================================
+   3.  SHORTS  — hide Shorts shelves & entire Shorts page
+   ========================================================================= */
+
+/* Shorts shelf on homepage / subscriptions / search results */
+html.ytfm-focus-active ytd-reel-shelf-renderer,
+html.ytfm-focus-active ytd-rich-shelf-renderer[is-shorts],
+html.ytfm-focus-active ytd-rich-section-renderer:has(ytd-reel-shelf-renderer) {
+  display: none !important;
+}
+
+/* Shorts mini-player or Shorts sidebar entries */
+html.ytfm-focus-active ytd-mini-guide-entry-renderer[aria-label="Shorts"],
+html.ytfm-focus-active ytd-guide-entry-renderer:has(a[title="Shorts"]) {
+  display: none !important;
+}
+
+/* Shorts page itself (when user navigates to /shorts/*) */
+html.ytfm-focus-active ytd-shorts {
+  display: none !important;
+}
+
+/* Shorts badges / overlays inside search results */
+html.ytfm-focus-active ytd-video-renderer [overlay-style="SHORTS"],
+html.ytfm-focus-active ytd-video-renderer:has(a[href*="/shorts/"]) {
+  display: none !important;
+}
+
+/* Shorts in grid form */
+html.ytfm-focus-active ytd-grid-video-renderer:has(a[href*="/shorts/"]) {
+  display: none !important;
+}
+
+/* Rich item renderers linking to Shorts */
+html.ytfm-focus-active ytd-rich-item-renderer:has(a[href*="/shorts/"]) {
+  display: none !important;
+}
+
+/* =========================================================================
+   4.  GENERAL  — other recommendation surfaces
+   ========================================================================= */
+
+/* "Breaking news" and "Top news" shelves */
+html.ytfm-focus-active ytd-rich-shelf-renderer[is-default-no-title],
+html.ytfm-focus-active ytd-horizontal-card-list-renderer {
+  display: none !important;
+}
+
+/* Notification / promo pop-ups (masthead ads, surveys, etc.) */
+html.ytfm-focus-active ytd-popup-container tp-yt-paper-dialog:has(ytd-mealbar-promo-renderer) {
+  display: none !important;
+}
+
+/* =========================================================================
+   5.  FOCUS-OFF PLACEHOLDER  — show a calming message on the homepage
+   ========================================================================= */
+
+html.ytfm-focus-active ytd-browse[page-subtype="home"]::after {
+  content: "🎯 Focus Mode is on — use the search bar or go to your subscriptions.";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 24px;
+  font-size: 1.25rem;
+  color: var(--yt-spec-text-secondary, #606060);
+  font-family: "YouTube Sans", "Roboto", Arial, sans-serif;
+  text-align: center;
+  width: 100%;
+}
