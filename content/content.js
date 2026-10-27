@@ -76,8 +76,11 @@
     // Only act when focus mode is on.
     if (!document.documentElement.classList.contains(ACTIVE_CLASS)) return;
 
+    const noHasSupport =
+      typeof CSS === "undefined" || !CSS.supports || !CSS.supports("selector(:has(*))");
+
     // --- Shorts shelf: remove if :has() isn't supported ---
-    if (typeof CSS === "undefined" || !CSS.supports || !CSS.supports("selector(:has(*))")) {
+    if (noHasSupport) {
       document.querySelectorAll("ytd-reel-shelf-renderer").forEach((el) => {
         el.style.display = "none";
       });
@@ -86,6 +89,16 @@
           section.style.display = "none";
         }
       });
+    }
+
+    // --- Watch page: hide #secondary only if no playlist is present ---
+    // (JS fallback for the CSS :has() rule)
+    if (noHasSupport) {
+      const secondary = document.querySelector("ytd-watch-flexy #secondary");
+      if (secondary) {
+        const hasPlaylist = !!secondary.querySelector("ytd-playlist-panel-renderer");
+        secondary.style.display = hasPlaylist ? "" : "none";
+      }
     }
 
     // --- Shorts links in guide sidebar ---

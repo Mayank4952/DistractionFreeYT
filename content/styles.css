@@ -32,19 +32,29 @@ html.ytfm-focus-active ytd-browse[page-subtype="home"] yt-chip-cloud-renderer {
    2.  WATCH PAGE  — hide sidebar recommendations ("Up next" / autoplay)
    ========================================================================= */
 
-/* The secondary column that holds all recommendations */
-html.ytfm-focus-active ytd-watch-flexy #secondary,
+/*
+ * Hide the entire secondary column ONLY when there is no playlist panel.
+ * When a playlist is active, keep the sidebar but hide just the recommendations.
+ */
+html.ytfm-focus-active ytd-watch-flexy #secondary:not(:has(ytd-playlist-panel-renderer)) {
+  display: none !important;
+}
+
+/* Always hide the "Up next" / autoplay recommendation list */
 html.ytfm-focus-active ytd-watch-flexy #related,
 html.ytfm-focus-active ytd-watch-flexy ytd-watch-next-secondary-results-renderer {
   display: none !important;
 }
 
-/* Let the player stretch to use the freed space */
-html.ytfm-focus-active ytd-watch-flexy #primary {
+/*
+ * Let the player stretch when there is no playlist sidebar.
+ * When a playlist IS present the sidebar stays, so we keep default widths.
+ */
+html.ytfm-focus-active ytd-watch-flexy:not(:has(#secondary ytd-playlist-panel-renderer)) #primary {
   max-width: 100% !important;
 }
 
-html.ytfm-focus-active ytd-watch-flexy #columns {
+html.ytfm-focus-active ytd-watch-flexy:not(:has(#secondary ytd-playlist-panel-renderer)) #columns {
   max-width: 100% !important;
 }
 
